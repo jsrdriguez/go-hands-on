@@ -3,6 +3,7 @@ package product
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -26,7 +27,26 @@ func MakeHttpHandler(s Service) http.Handler {
 		kithttp.EncodeJSONResponse,
 	))
 
+	r.Method(http.MethodPost, "/", kithttp.NewServer(
+		makAddProductsEndPoint(s),
+		addProductRequestDecoder,
+		kithttp.EncodeJSONResponse,
+	))
+
 	return r
+}
+
+func addProductRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {
+	request := getAddProductRequest{}
+
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(request)
+
+	return request, nil
 }
 
 func getProductsRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {
