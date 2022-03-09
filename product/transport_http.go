@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -13,15 +14,30 @@ import (
 func MakeHttpHandler(s Service) http.Handler {
 	r := chi.NewRouter()
 
-	getProductByIDRequest := kithttp.NewServer(
+	r.Method(http.MethodGet, "/{id}", kithttp.NewServer(
 		makeGetProductByIdEndPoint(s),
 		getProductByIDRequestDecoder,
 		kithttp.EncodeJSONResponse,
-	)
+	))
 
-	r.Method(http.MethodGet, "/{id}", getProductByIDRequest)
+	r.Method(http.MethodPost, "/paginated", kithttp.NewServer(
+		makGetProductsEndPoint(s),
+		getProductsRequestDecoder,
+		kithttp.EncodeJSONResponse,
+	))
 
 	return r
+}
+
+func getProductsRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {
+	request := getProductRequest{}
+
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		panic(err)
+	}
+
+	return request, nil
 }
 
 func getProductByIDRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {
