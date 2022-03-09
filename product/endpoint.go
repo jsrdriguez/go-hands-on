@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/go-kit/kit/endpoint"
+	"github.com/jsrdriguez/go-hands-on/helpers"
 )
 
 type getProductByIDRequest struct {
@@ -38,14 +39,25 @@ type deleteProductRequest struct {
 	ProductId int
 }
 
+type getBestSellersRequest struct{}
+
+func makeBestSellersProductsEndPoint(s Service) endpoint.Endpoint {
+	bestSellerProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
+		data, err := s.GetBetSellers()
+		helpers.Catch(err)
+
+		return data, nil
+	}
+
+	return bestSellerProductByIdEndPoint
+}
+
 func makeDeleteProductsEndPoint(s Service) endpoint.Endpoint {
 	deleteProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(deleteProductRequest)
 
 		productId, err := s.DeleteProduct(&req)
-		if err != nil {
-			panic(nil)
-		}
+		helpers.Catch(err)
 
 		return productId, nil
 
@@ -59,9 +71,7 @@ func makeUpdateProductsEndPoint(s Service) endpoint.Endpoint {
 		req := request.(updateProductRequest)
 
 		productId, err := s.UpdateProduct(&req)
-		if err != nil {
-			panic(nil)
-		}
+		helpers.Catch(err)
 
 		return productId, nil
 
@@ -76,10 +86,7 @@ func makeGetProductByIdEndPoint(s Service) endpoint.Endpoint {
 		req := request.(getProductByIDRequest)
 
 		product, err := s.GetProductById(&req)
-
-		if err != nil {
-			panic(nil)
-		}
+		helpers.Catch(err)
 
 		return product, nil
 	}
@@ -92,9 +99,7 @@ func makGetProductsEndPoint(s Service) endpoint.Endpoint {
 		req := request.(getProductRequest)
 
 		result, err := s.GetProducts(&req)
-		if err != nil {
-			panic(nil)
-		}
+		helpers.Catch(err)
 
 		return result, nil
 
@@ -108,9 +113,7 @@ func makAddProductsEndPoint(s Service) endpoint.Endpoint {
 		req := request.(getAddProductRequest)
 
 		productId, err := s.InsertProduct(&req)
-		if err != nil {
-			panic(nil)
-		}
+		helpers.Catch(err)
 
 		return productId, nil
 

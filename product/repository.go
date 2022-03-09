@@ -1,6 +1,10 @@
 package product
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/jsrdriguez/go-hands-on/helpers"
+)
 
 type Repository interface {
 	GetProductById(productId int) (*Product, error)
@@ -9,6 +13,8 @@ type Repository interface {
 	InsertProduct(params *getAddProductRequest) (int64, error)
 	UpdateProduct(params *updateProductRequest) (int64, error)
 	DeleteProduct(params *deleteProductRequest) (int64, error)
+	GetBetSellers() ([]*ProductTop, error)
+	GetTotalVentas() (float64, error)
 }
 
 type repository struct {
@@ -19,13 +25,52 @@ func NewRepository(database *sql.DB) Repository {
 	return &repository{db: database}
 }
 
+func (r *repository) GetTotalVentas() (float64, error) {
+	sql := "SELECT SUM(od.quantity * od.unit_price) vendido FROM order_details od"
+	var total float64
+
+	row := r.db.QueryRow(sql)
+	err := row.Scan(&total)
+
+	helpers.Catch(err)
+
+	return total, nil
+}
+
+func (r *repository) GetBetSellers() ([]*ProductTop, error) {
+	sql := `SELECT od.product_id, p.product_name, SUM(od.quantity * od.unit_price) AS vendido 
+					FROM order_details od
+					INNER JOIN products p ON od.product_id = p.id
+					GROUP BY od.product_id
+					ORDER BY vendido desc LIMIT 10`
+
+	rows, err := r.db.Query(sql)
+	helpers.Catch(err)
+
+	var products []*ProductTop
+
+	for rows.Next() {
+		product := &ProductTop{}
+
+		err = rows.Scan(
+			&product.ID,
+			&product.ProductName,
+			&product.Vendidos,
+		)
+
+		helpers.Catch(err)
+
+		products = append(products, product)
+	}
+
+	return products, nil
+}
+
 func (r *repository) DeleteProduct(params *deleteProductRequest) (int64, error) {
 	const sql = `DELETE FROM products WHERE id = ?`
 
 	result, err := r.db.Exec(sql, params.ProductId)
-	if err != nil {
-		panic(err)
-	}
+	helpers.Catch(err)
 
 	count, _ := result.RowsAffected()
 
@@ -52,9 +97,7 @@ func (r *repository) UpdateProduct(params *updateProductRequest) (int64, error) 
 		params.Category,
 		params.ID,
 	)
-	if err != nil {
-		panic(err)
-	}
+	helpers.Catch(err)
 
 	id := params.ID
 
@@ -74,9 +117,7 @@ func (r *repository) InsertProduct(params *getAddProductRequest) (int64, error) 
 		params.ListPrice,
 		params.Category,
 	)
-	if err != nil {
-		panic(err)
-	}
+	helpers.Catch(err)
 
 	id, _ := result.LastInsertId()
 
@@ -99,9 +140,7 @@ func (r *repository) GetProductById(productId int) (*Product, error) {
 		&product.ListPrice,
 		&product.Category,
 	)
-	if err != nil {
-		panic(err)
-	}
+	helpers.Catch(err)
 
 	return product, nil
 }
@@ -113,9 +152,7 @@ func (r *repository) GetProducts(params *getProductRequest) ([]*Product, error) 
 					ORDER BY id LIMIT ? OFFSET ?`
 
 	rows, err := r.db.Query(sql, params.Limit, params.Offset)
-	if err != nil {
-		panic(err)
-	}
+	helpers.Catch(err)
 
 	var products []*Product
 
@@ -132,9 +169,7 @@ func (r *repository) GetProducts(params *getProductRequest) ([]*Product, error) 
 			&product.Category,
 		)
 
-		if err != nil {
-			panic(err)
-		}
+		helpers.Catch(err)
 
 		products = append(products, product)
 	}
@@ -149,9 +184,7 @@ func (r *repository) GetTotalProducts() (int, error) {
 	row := r.db.QueryRow(sql)
 	err := row.Scan(&total)
 
-	if err != nil {
-		panic(err)
-	}
+	helpers.Catch(err)
 
 	return total, nil
 }

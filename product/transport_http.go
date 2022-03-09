@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/jsrdriguez/go-hands-on/helpers"
 
 	kithttp "github.com/go-kit/kit/transport/http"
 )
@@ -44,7 +45,17 @@ func MakeHttpHandler(s Service) http.Handler {
 		kithttp.EncodeJSONResponse,
 	))
 
+	r.Method(http.MethodGet, "/bestSellers", kithttp.NewServer(
+		makeBestSellersProductsEndPoint(s),
+		BestSellersRequestDecoder,
+		kithttp.EncodeJSONResponse,
+	))
+
 	return r
+}
+
+func BestSellersRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {
+	return getBestSellersRequest{}, nil
 }
 
 func deleteProductRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {
@@ -59,9 +70,7 @@ func updateProductRequestDecoder(context context.Context, r *http.Request) (inte
 	request := updateProductRequest{}
 
 	err := json.NewDecoder(r.Body).Decode(&request)
-	if err != nil {
-		panic(err)
-	}
+	helpers.Catch(err)
 
 	return request, nil
 }
@@ -70,9 +79,7 @@ func addProductRequestDecoder(context context.Context, r *http.Request) (interfa
 	request := getAddProductRequest{}
 
 	err := json.NewDecoder(r.Body).Decode(&request)
-	if err != nil {
-		panic(err)
-	}
+	helpers.Catch(err)
 
 	return request, nil
 }
@@ -81,9 +88,7 @@ func getProductsRequestDecoder(context context.Context, r *http.Request) (interf
 	request := getProductRequest{}
 
 	err := json.NewDecoder(r.Body).Decode(&request)
-	if err != nil {
-		panic(err)
-	}
+	helpers.Catch(err)
 
 	return request, nil
 }
