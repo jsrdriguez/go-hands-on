@@ -34,8 +34,28 @@ type updateProductRequest struct {
 	Category     string
 }
 
+type deleteProductRequest struct {
+	ProductId int
+}
+
+func makeDeleteProductsEndPoint(s Service) endpoint.Endpoint {
+	deleteProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(deleteProductRequest)
+
+		productId, err := s.DeleteProduct(&req)
+		if err != nil {
+			panic(nil)
+		}
+
+		return productId, nil
+
+	}
+
+	return deleteProductByIdEndPoint
+}
+
 func makeUpdateProductsEndPoint(s Service) endpoint.Endpoint {
-	getProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
+	updateProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(updateProductRequest)
 
 		productId, err := s.UpdateProduct(&req)
@@ -47,7 +67,7 @@ func makeUpdateProductsEndPoint(s Service) endpoint.Endpoint {
 
 	}
 
-	return getProductByIdEndPoint
+	return updateProductByIdEndPoint
 }
 
 func makeGetProductByIdEndPoint(s Service) endpoint.Endpoint {
@@ -68,7 +88,7 @@ func makeGetProductByIdEndPoint(s Service) endpoint.Endpoint {
 }
 
 func makGetProductsEndPoint(s Service) endpoint.Endpoint {
-	getProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
+	getProductsByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(getProductRequest)
 
 		result, err := s.GetProducts(&req)
@@ -80,11 +100,11 @@ func makGetProductsEndPoint(s Service) endpoint.Endpoint {
 
 	}
 
-	return getProductByIdEndPoint
+	return getProductsByIdEndPoint
 }
 
 func makAddProductsEndPoint(s Service) endpoint.Endpoint {
-	getProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
+	addProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(getAddProductRequest)
 
 		productId, err := s.InsertProduct(&req)
@@ -96,5 +116,5 @@ func makAddProductsEndPoint(s Service) endpoint.Endpoint {
 
 	}
 
-	return getProductByIdEndPoint
+	return addProductByIdEndPoint
 }
