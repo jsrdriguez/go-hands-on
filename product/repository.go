@@ -7,6 +7,7 @@ type Repository interface {
 	GetProducts(params *getProductRequest) ([]*Product, error)
 	GetTotalProducts() (int, error)
 	InsertProduct(params *getAddProductRequest) (int64, error)
+	UpdateProduct(params *updateProductRequest) (int64, error)
 }
 
 type repository struct {
@@ -17,18 +18,47 @@ func NewRepository(database *sql.DB) Repository {
 	return &repository{db: database}
 }
 
+func (r *repository) UpdateProduct(params *updateProductRequest) (int64, error) {
+	const sql = `UPDATE products
+							 SET 
+							 product_code = ?, 
+							 product_name = ?, 
+							 description = ?, 
+							 standard_cost = ?, 
+							 list_price = ?, 
+							 category = ?
+							 WHERE id = ?`
+
+	_, err := r.db.Exec(sql,
+		params.ProductCode,
+		params.ProductName,
+		params.Description,
+		params.StandardCost,
+		params.ListPrice,
+		params.Category,
+		params.ID,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	id := params.ID
+
+	return id, nil
+}
+
 func (r *repository) InsertProduct(params *getAddProductRequest) (int64, error) {
 	const sql = `INSERT INTO 
 							 products(product_code, product_name, description, standard_cost, list_price, category)
 							 VALUES(?,?,?,?,?,?)`
 
 	result, err := r.db.Exec(sql,
-		&params.ProductCode,
-		&params.ProductName,
-		&params.Description,
-		&params.StandardCost,
-		&params.ListPrice,
-		&params.Category,
+		params.ProductCode,
+		params.ProductName,
+		params.Description,
+		params.StandardCost,
+		params.ListPrice,
+		params.Category,
 	)
 	if err != nil {
 		panic(err)
