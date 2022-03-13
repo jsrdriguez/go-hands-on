@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -30,6 +31,7 @@ func main() {
 	r.Mount("/products", product.MakeHttpHandler(productService))
 	r.Mount("/employees", employee.MakeHttpHandler(employeeService))
 
+	fmt.Println("localhost:9000")
 	http.ListenAndServe(":9000", r)
 
 }

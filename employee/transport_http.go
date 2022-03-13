@@ -27,13 +27,57 @@ func MakeHttpHandler(s Service) http.Handler {
 		kithttp.EncodeJSONResponse,
 	))
 
+	r.Method(http.MethodDelete, "/{id}", kithttp.NewServer(
+		makeDeleteEmployee(s),
+		getDeleteEmployeeRequestDecoder,
+		kithttp.EncodeJSONResponse,
+	))
+
 	r.Method(http.MethodGet, "/best", kithttp.NewServer(
 		makeGetBestEmployee(s),
 		getBestEmployeeRequestDecoder,
 		kithttp.EncodeJSONResponse,
 	))
 
+	r.Method(http.MethodPost, "/", kithttp.NewServer(
+		makeInsertEmployee(s),
+		getAddEmployeeRequestDecoder,
+		kithttp.EncodeJSONResponse,
+	))
+
+	r.Method(http.MethodPut, "/", kithttp.NewServer(
+		makeUpdateEmployee(s),
+		getUpdateEmployeeRequestDecoder,
+		kithttp.EncodeJSONResponse,
+	))
+
 	return r
+}
+
+func getDeleteEmployeeRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {
+	id, _ := strconv.Atoi(chi.URLParam(r, "id"))
+
+	return deleteEmployeesRequest{
+		EmployeeId: id,
+	}, nil
+}
+
+func getUpdateEmployeeRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {
+	request := updateEmployeesRequest{}
+
+	err := json.NewDecoder(r.Body).Decode(&request)
+	helpers.Catch(err)
+
+	return request, nil
+}
+
+func getAddEmployeeRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {
+	request := addEmployeesRequest{}
+
+	err := json.NewDecoder(r.Body).Decode(&request)
+	helpers.Catch(err)
+
+	return request, nil
 }
 
 func getBestEmployeeRequestDecoder(context context.Context, r *http.Request) (interface{}, error) {

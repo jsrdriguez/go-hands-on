@@ -11,6 +11,9 @@ type Repository interface {
 	GetTotalEmployees() (int64, error)
 	GetEmployeeById(params *getEmployeesByIdRequest) (*Employee, error)
 	GetBestEmployee(params *getEmployeesBestRequest) (*BestEmployee, error)
+	AddEmployee(params *addEmployeesRequest) (int64, error)
+	UpdateEmployee(params *updateEmployeesRequest) (int64, error)
+	DeleteEmployee(params *deleteEmployeesRequest) (int, error)
 }
 
 type repository struct {
@@ -21,6 +24,72 @@ func NewRepository(db *sql.DB) Repository {
 	return &repository{
 		db: db,
 	}
+}
+
+func (r *repository) DeleteEmployee(params *deleteEmployeesRequest) (int, error) {
+	const sql = `DELETE FROM employees WHERE id = ?`
+
+	_, err := r.db.Exec(sql, &params.EmployeeId)
+	helpers.Catch(err)
+
+	return params.EmployeeId, err
+}
+
+func (r *repository) UpdateEmployee(params *updateEmployeesRequest) (int64, error) {
+	const sql = `UPDATE employees SET 
+	first_name = ?, 
+	last_name = ?, 
+	company = ?, 
+	email_address = ?, 
+	job_title = ?, 
+	business_phone = ?, 
+	home_phone = ?, 
+	mobile_phone = ?, 
+	fax_number = ?, 
+	address = ? WHERE id = ?`
+
+	_, err := r.db.Exec(sql,
+		&params.FirstName,
+		&params.LastName,
+		&params.Company,
+		&params.EmailAddress,
+		&params.JobTitle,
+		&params.BusinessPhone,
+		&params.HomePhone,
+		&params.MobilePhone,
+		&params.FaxNumber,
+		&params.Address,
+		&params.ID,
+	)
+	helpers.Catch(err)
+
+	return params.ID, err
+}
+
+func (r *repository) AddEmployee(params *addEmployeesRequest) (int64, error) {
+	const sql = `INSERT INTO 
+	employees (first_name, last_name, company, email_address, job_title, business_phone, home_phone, mobile_phone, fax_number, address)
+	VALUES(?,?,?,?,?,?,?,?,?,?)`
+
+	result, err := r.db.Exec(sql,
+		&params.FirstName,
+		&params.LastName,
+		&params.Company,
+		&params.EmailAddress,
+		&params.JobTitle,
+		&params.BusinessPhone,
+		&params.HomePhone,
+		&params.MobilePhone,
+		&params.FaxNumber,
+		&params.Address,
+	)
+
+	helpers.Catch(err)
+
+	id, err := result.LastInsertId()
+	helpers.Catch(err)
+
+	return id, err
 }
 
 func (r *repository) GetBestEmployee(params *getEmployeesBestRequest) (*BestEmployee, error) {
