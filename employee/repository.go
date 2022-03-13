@@ -13,7 +13,7 @@ type Repository interface {
 	GetBestEmployee(params *getEmployeesBestRequest) (*BestEmployee, error)
 	AddEmployee(params *addEmployeesRequest) (int64, error)
 	UpdateEmployee(params *updateEmployeesRequest) (int64, error)
-	DeleteEmployee(params *deleteEmployeesRequest) (int, error)
+	DeleteEmployee(params *deleteEmployeesRequest) (int64, error)
 }
 
 type repository struct {
@@ -26,13 +26,15 @@ func NewRepository(db *sql.DB) Repository {
 	}
 }
 
-func (r *repository) DeleteEmployee(params *deleteEmployeesRequest) (int, error) {
+func (r *repository) DeleteEmployee(params *deleteEmployeesRequest) (int64, error) {
 	const sql = `DELETE FROM employees WHERE id = ?`
 
-	_, err := r.db.Exec(sql, &params.EmployeeId)
+	result, err := r.db.Exec(sql, &params.EmployeeId)
 	helpers.Catch(err)
 
-	return params.EmployeeId, err
+	count, err := result.RowsAffected()
+
+	return count, err
 }
 
 func (r *repository) UpdateEmployee(params *updateEmployeesRequest) (int64, error) {

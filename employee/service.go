@@ -8,7 +8,7 @@ type Service interface {
 	GetBestEmployee(params *getEmployeesBestRequest) (*BestEmployee, error)
 	AddEmployee(params *addEmployeesRequest) (int64, error)
 	UpdateEmployee(params *updateEmployeesRequest) (int64, error)
-	DeleteEmployee(params *deleteEmployeesRequest) (int, error)
+	DeleteEmployee(params *deleteEmployeesRequest) (int64, error)
 }
 
 type service struct {
@@ -21,7 +21,7 @@ func NewService(repo Repository) Service {
 	}
 }
 
-func (s service) DeleteEmployee(params *deleteEmployeesRequest) (int, error) {
+func (s service) DeleteEmployee(params *deleteEmployeesRequest) (int64, error) {
 	return s.repo.DeleteEmployee(params)
 }
 
