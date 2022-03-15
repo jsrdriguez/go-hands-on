@@ -41,6 +41,12 @@ type deleteProductRequest struct {
 
 type getBestSellersRequest struct{}
 
+// @Sumary Mejores Productos Vendidos
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Success 200 {object} product.ProductTopResponse "ok"
+// @Router /products/bestSellers [get]
 func makeBestSellersProductsEndPoint(s Service) endpoint.Endpoint {
 	bestSellerProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		data, err := s.GetBetSellers()
@@ -52,6 +58,13 @@ func makeBestSellersProductsEndPoint(s Service) endpoint.Endpoint {
 	return bestSellerProductByIdEndPoint
 }
 
+// @Sumary Eliminar Producto by Id
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param id path int true "Product Id"
+// @Success 200 {integer} int "ok"
+// @Router /products/{id} [delete]
 func makeDeleteProductsEndPoint(s Service) endpoint.Endpoint {
 	deleteProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(deleteProductRequest)
@@ -66,6 +79,13 @@ func makeDeleteProductsEndPoint(s Service) endpoint.Endpoint {
 	return deleteProductByIdEndPoint
 }
 
+// @Sumary Actualizar Productos
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param request body product.updateProductRequest true "User Data"
+// @Success 200 {integer} int "ok"
+// @Router /products/ [put]
 func makeUpdateProductsEndPoint(s Service) endpoint.Endpoint {
 	updateProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(updateProductRequest)
@@ -80,6 +100,13 @@ func makeUpdateProductsEndPoint(s Service) endpoint.Endpoint {
 	return updateProductByIdEndPoint
 }
 
+// @Sumary Producto by Id
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param id path int true "Product Id"
+// @Success 200 {object} product.Product "ok"
+// @Router /products/{id} [get]
 func makeGetProductByIdEndPoint(s Service) endpoint.Endpoint {
 
 	getProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
@@ -94,6 +121,13 @@ func makeGetProductByIdEndPoint(s Service) endpoint.Endpoint {
 	return getProductByIdEndPoint
 }
 
+// @Sumary Lista de Productos
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param request body product.getProductRequest true "User Data"
+// @Success 200 {object} product.ProductList "ok"
+// @Router /products/paginated [post]
 func makGetProductsEndPoint(s Service) endpoint.Endpoint {
 	getProductsByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(getProductRequest)
@@ -108,6 +142,13 @@ func makGetProductsEndPoint(s Service) endpoint.Endpoint {
 	return getProductsByIdEndPoint
 }
 
+// @Sumary Insertar Productos
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param request body product.getAddProductRequest true "User Data"
+// @Success 200 {integer} int "ok"
+// @Router /products/ [post]
 func makAddProductsEndPoint(s Service) endpoint.Endpoint {
 	addProductByIdEndPoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(getAddProductRequest)

@@ -12,6 +12,13 @@ type getCustomerRequest struct {
 	Offset int
 }
 
+// @Sumary Lista de Clientes
+// @Tags Customers
+// @Accept json
+// @Produce json
+// @Param request body customer.getCustomerRequest true "User Data"
+// @Success 200 {object} customer.CustomerList "ok"
+// @Router /customers/paginated [post]
 func makeGetCustomers(s Service) endpoint.Endpoint {
 	getCustomers := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(getCustomerRequest)

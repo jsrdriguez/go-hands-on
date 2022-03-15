@@ -50,6 +50,13 @@ type deleteEmployeesRequest struct {
 	EmployeeId int
 }
 
+// @Sumary Elimina un Empleado by Id
+// @Tags Employee
+// @Accept json
+// @Produce json
+// @Param id path int true "Employee Id"
+// @Success 200 {object} employee.deleteEmployeesRequest "ok"
+// @Router /employees/{id} [delete]
 func makeDeleteEmployee(s Service) endpoint.Endpoint {
 	deleteEmployees := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(deleteEmployeesRequest)
@@ -63,6 +70,13 @@ func makeDeleteEmployee(s Service) endpoint.Endpoint {
 	return deleteEmployees
 }
 
+// @Sumary Actualizar Empleados
+// @Tags Employee
+// @Accept json
+// @Produce json
+// @Param request body employee.updateEmployeesRequest true "User Data"
+// @Success 200 {integer} int "ok"
+// @Router /employees/ [put]
 func makeUpdateEmployee(s Service) endpoint.Endpoint {
 	updateEmployee := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(updateEmployeesRequest)
@@ -76,6 +90,13 @@ func makeUpdateEmployee(s Service) endpoint.Endpoint {
 	return updateEmployee
 }
 
+// @Sumary Insertar Empleados
+// @Tags Employee
+// @Accept json
+// @Produce json
+// @Param request body employee.addEmployeesRequest true "User Data"
+// @Success 200 {integer} int "ok"
+// @Router /employees/ [post]
 func makeInsertEmployee(s Service) endpoint.Endpoint {
 	insertEmployee := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(addEmployeesRequest)
@@ -89,6 +110,12 @@ func makeInsertEmployee(s Service) endpoint.Endpoint {
 	return insertEmployee
 }
 
+// @Sumary Mejores Empleado
+// @Tags Employee
+// @Accept json
+// @Produce json
+// @Success 200 {object} employee.BestEmployee "ok"
+// @Router /employees/best [get]
 func makeGetBestEmployee(s Service) endpoint.Endpoint {
 
 	getBestEmployee := func(ctx context.Context, request interface{}) (interface{}, error) {
@@ -103,6 +130,13 @@ func makeGetBestEmployee(s Service) endpoint.Endpoint {
 	return getBestEmployee
 }
 
+// @Sumary Empleado by Id
+// @Tags Employee
+// @Accept json
+// @Produce json
+// @Param id path int true "Employee Id"
+// @Success 200 {object} employee.Employee "ok"
+// @Router /employees/{id} [get]
 func makeGetEmployeeIdEndpoint(s Service) endpoint.Endpoint {
 
 	getEmployeeId := func(ctx context.Context, request interface{}) (interface{}, error) {
@@ -117,6 +151,13 @@ func makeGetEmployeeIdEndpoint(s Service) endpoint.Endpoint {
 	return getEmployeeId
 }
 
+// @Sumary Lista de Empleados
+// @Tags Employee
+// @Accept json
+// @Produce json
+// @Param request body employee.getEmployeesRequest true "User Data"
+// @Success 200 {object} employee.EmployeeList "ok"
+// @Router /employees/paginated [post]
 func makeGetEmployeesEndpoint(s Service) endpoint.Endpoint {
 
 	getEmployeesEndpoint := func(ctx context.Context, request interface{}) (interface{}, error) {

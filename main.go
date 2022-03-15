@@ -10,7 +10,19 @@ import (
 	"github.com/jsrdriguez/go-hands-on/employee"
 	"github.com/jsrdriguez/go-hands-on/order"
 	"github.com/jsrdriguez/go-hands-on/product"
+
+	httpSwagger "github.com/swaggo/http-swagger"
+
+	_ "github.com/jsrdriguez/go-hands-on/docs"
 )
+
+//@title         Api
+// @version      1.0
+// @description  This is a sample server celler server.
+
+// @contact.name   API Support
+// @contact.url    https://example.com
+// @contact.email  support@swagger.io
 
 func main() {
 	database := config.InitDB()
@@ -40,6 +52,10 @@ func main() {
 	r.Mount("/employees", employee.MakeHttpHandler(employeeService))
 	r.Mount("/customers", customer.MakeHttpHandler(customerService))
 	r.Mount("/order", order.MakeHttpHandler(orderService))
+
+	r.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:9000/swagger/doc.json"),
+	))
 
 	fmt.Println("localhost:9000")
 	http.ListenAndServe(":9000", r)

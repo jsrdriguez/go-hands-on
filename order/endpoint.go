@@ -42,6 +42,13 @@ type deleteOrderRequest struct {
 	OrderId int64
 }
 
+// @Sumary Eliminar OrderDetail by Id
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param id path int true "OrderDetail Id"
+// @Success 200 {integer} int "ok"
+// @Router /detail/{id} [delete]
 func makeDeleteOrderDetailEnpoint(s Service) endpoint.Endpoint {
 	deleteOrderDetail := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(deleteOrderDetailRequest)
@@ -55,6 +62,13 @@ func makeDeleteOrderDetailEnpoint(s Service) endpoint.Endpoint {
 	return deleteOrderDetail
 }
 
+// @Sumary Eliminar Order by Id
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param id path int true "Order Id"
+// @Success 200 {integer} int "ok"
+// @Router /Order/{id} [delete]
 func makeDeleteOrderEnpoint(s Service) endpoint.Endpoint {
 	deleteOrder := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(deleteOrderRequest)
@@ -68,6 +82,13 @@ func makeDeleteOrderEnpoint(s Service) endpoint.Endpoint {
 	return deleteOrder
 }
 
+// @Sumary Update Order
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param request body order.addOrderRequest true "Order Data"
+// @Success 200 {integer} int "ok"
+// @Router /order/ [put]
 func makeUpdateOrderEnpoint(s Service) endpoint.Endpoint {
 	UpdateOrder := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(addOrderRequest)
@@ -81,6 +102,13 @@ func makeUpdateOrderEnpoint(s Service) endpoint.Endpoint {
 	return UpdateOrder
 }
 
+// @Sumary Insertar Order
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param request body order.addOrderRequest true "Order Data"
+// @Success 200 {integer} int "ok"
+// @Router /order/ [post]
 func makeAddOrderEnpoint(s Service) endpoint.Endpoint {
 	addOrder := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(addOrderRequest)
@@ -94,6 +122,13 @@ func makeAddOrderEnpoint(s Service) endpoint.Endpoint {
 	return addOrder
 }
 
+// @Sumary Lista de Ordenes
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param request body order.getOrdersRequest true "User Data"
+// @Success 200 {object} order.OrderList "ok"
+// @Router /order/paginated [post]
 func makeGetOrdersEndPoint(s Service) endpoint.Endpoint {
 	getOrders := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(getOrdersRequest)
@@ -107,6 +142,13 @@ func makeGetOrdersEndPoint(s Service) endpoint.Endpoint {
 	return getOrders
 }
 
+// @Sumary Order by Id
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param id path int true "OrderId"
+// @Success 200 {object} order.OrderItem "ok"
+// @Router /order/{id} [get]
 func makeGetOrderByIdEndpoint(s Service) endpoint.Endpoint {
 	getOrderByIdEndpoint := func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(getOrderByIdRequest)

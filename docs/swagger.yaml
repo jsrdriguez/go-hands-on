@@ -1,0 +1,673 @@
+definitions:
+  customer.Customer:
+    properties:
+      address:
+        type: string
+      businessPhone:
+        type: string
+      city:
+        type: string
+      company:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+    type: object
+  customer.CustomerList:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/customer.Customer'
+        type: array
+      totalRecords:
+        type: integer
+    type: object
+  customer.getCustomerRequest:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+  employee.BestEmployee:
+    properties:
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+      totalVentas:
+        type: integer
+    type: object
+  employee.Employee:
+    properties:
+      address:
+        type: string
+      businessPhone:
+        type: string
+      company:
+        type: string
+      emailAddress:
+        type: string
+      faxNumber:
+        type: string
+      firstName:
+        type: string
+      homePhone:
+        type: string
+      id:
+        type: integer
+      jobTitle:
+        type: string
+      lastName:
+        type: string
+      mobilePhone:
+        type: string
+    type: object
+  employee.EmployeeList:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/employee.Employee'
+        type: array
+      totalRecords:
+        type: integer
+    type: object
+  employee.addEmployeesRequest:
+    properties:
+      address:
+        type: string
+      businessPhone:
+        type: string
+      company:
+        type: string
+      emailAddress:
+        type: string
+      faxNumber:
+        type: string
+      firstName:
+        type: string
+      homePhone:
+        type: string
+      jobTitle:
+        type: string
+      lastName:
+        type: string
+      mobilePhone:
+        type: string
+    type: object
+  employee.deleteEmployeesRequest:
+    properties:
+      employeeId:
+        type: integer
+    type: object
+  employee.getEmployeesRequest:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+  employee.updateEmployeesRequest:
+    properties:
+      address:
+        type: string
+      businessPhone:
+        type: string
+      company:
+        type: string
+      emailAddress:
+        type: string
+      faxNumber:
+        type: string
+      firstName:
+        type: string
+      homePhone:
+        type: string
+      id:
+        type: integer
+      jobTitle:
+        type: string
+      lastName:
+        type: string
+      mobilePhone:
+        type: string
+    type: object
+  order.OrderDetailItem:
+    properties:
+      id:
+        type: integer
+      orderId:
+        type: integer
+      productId:
+        type: integer
+      productName:
+        type: string
+      quantity:
+        type: number
+      unitPrice:
+        type: number
+    type: object
+  order.OrderItem:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      company:
+        type: string
+      customer:
+        type: string
+      customerId:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/order.OrderDetailItem'
+        type: array
+      id:
+        type: integer
+      orderDate:
+        type: string
+      phone:
+        type: string
+      statusId:
+        type: string
+      statusName:
+        type: string
+    type: object
+  order.OrderList:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/order.OrderItem'
+        type: array
+      totalRecords:
+        type: integer
+    type: object
+  order.addOrderDetailRequest:
+    properties:
+      id:
+        type: integer
+      orderID:
+        type: integer
+      productID:
+        type: integer
+      quantity:
+        type: integer
+      unitPrice:
+        type: number
+    type: object
+  order.addOrderRequest:
+    properties:
+      customerID:
+        type: integer
+      id:
+        type: integer
+      orderDate:
+        type: string
+      orderDetails:
+        items:
+          $ref: '#/definitions/order.addOrderDetailRequest'
+        type: array
+    type: object
+  order.getOrdersRequest:
+    properties:
+      dateFrom: {}
+      dateTo: {}
+      limit:
+        type: integer
+      offset:
+        type: integer
+      status: {}
+    type: object
+  product.Product:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      listPrice:
+        type: number
+      product_code:
+        type: string
+      product_name:
+        type: string
+      standardCost:
+        type: number
+    type: object
+  product.ProductList:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/product.Product'
+        type: array
+      totalRecords:
+        type: integer
+    type: object
+  product.ProductTop:
+    properties:
+      id:
+        type: integer
+      product_name:
+        type: string
+      vendidos:
+        type: number
+    type: object
+  product.ProductTopResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/product.ProductTop'
+        type: array
+      totalVentas:
+        type: number
+    type: object
+  product.getAddProductRequest:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      listPrice:
+        type: string
+      productCode:
+        type: string
+      productName:
+        type: string
+      standardCost:
+        type: string
+    type: object
+  product.getProductRequest:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+  product.updateProductRequest:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      listPrice:
+        type: string
+      productCode:
+        type: string
+      productName:
+        type: string
+      standardCost:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: https://example.com
+  description: This is a sample server celler server.
+  title: Api
+  version: "1.0"
+paths:
+  /Order/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Order Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: integer
+      tags:
+      - Order
+  /customers/paginated:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/customer.getCustomerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/customer.CustomerList'
+      tags:
+      - Customers
+  /detail/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: OrderDetail Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: integer
+      tags:
+      - Order
+  /employees/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/employee.addEmployeesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: integer
+      tags:
+      - Employee
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/employee.updateEmployeesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: integer
+      tags:
+      - Employee
+  /employees/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Employee Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/employee.deleteEmployeesRequest'
+      tags:
+      - Employee
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Employee Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/employee.Employee'
+      tags:
+      - Employee
+  /employees/best:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/employee.BestEmployee'
+      tags:
+      - Employee
+  /employees/paginated:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/employee.getEmployeesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/employee.EmployeeList'
+      tags:
+      - Employee
+  /order/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Order Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/order.addOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: integer
+      tags:
+      - Order
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Order Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/order.addOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: integer
+      tags:
+      - Order
+  /order/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: OrderId
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/order.OrderItem'
+      tags:
+      - Order
+  /order/paginated:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/order.getOrdersRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/order.OrderList'
+      tags:
+      - Order
+  /products/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/product.getAddProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: integer
+      tags:
+      - Product
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/product.updateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: integer
+      tags:
+      - Product
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: integer
+      tags:
+      - Product
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/product.Product'
+      tags:
+      - Product
+  /products/bestSellers:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/product.ProductTopResponse'
+      tags:
+      - Product
+  /products/paginated:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/product.getProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/product.ProductList'
+      tags:
+      - Product
+swagger: "2.0"
